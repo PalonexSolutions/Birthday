@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You ❤️</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+font-family:'Inter',sans-serif;
+overflow:hidden;
+color:white;
+background:#0f0c29;
+transition:background 0.2s;
+}
+
+/* Original Moving Gradient Glow */
+body::before{
+content:"";
+position:absolute;
+width:120%;
+height:120%;
+background:radial-gradient(circle at center,#ff4ecd55,#6c63ff55,transparent);
+filter:blur(120px);
+z-index:0;
+transition:0.2s;
+}
+
+h1{
+position:absolute;
+top:40px;
+font-family:'Playfair Display',serif;
+font-size:2rem;
+letter-spacing:1px;
+z-index:2;
+}
+
+.container{
+display:flex;
+gap:30px;
+z-index:2;
+}
+
+/* Card */
+.card{
+width:260px;
+height: 340px;
+perspective:1200px;
+cursor:pointer;
+}
+
+.inner{
+width:100%;
+height:100%;
+position:relative;
+transform-style:preserve-3d;
+transition:transform 0.8s ease;
+will-change:transform;
+}
+
+.card.flipped .inner{
+transform:rotateY(180deg);
+}
+
+.front,.back{
+position:absolute;
+width:100%;
+height:100%;
+border-radius:20px;
+backdrop-filter:blur(20px);
+background:rgba(255,255,255,0.08);
+border:1px solid rgba(255,255,255,0.2);
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+padding:20px;
+backface-visibility:hidden;
+transition:0.3s;
+transform:translateZ(0);
+}
+
+.front{
+font-family:'Playfair Display',serif;
+font-size:1.2rem;
+}
+
+.back{
+transform:rotateY(180deg);
+flex-direction:column;
+font-size:0.9rem;
+}
+
+.back img{
+width:100%;
+height:280px;
+object-fit:cover;
+border-radius:16px;
+margin-bottom:12px;
+}
+
+.card:hover .front{
+box-shadow:0 0 30px rgba(255,105,180,0.6);
+transform:scale(1.03);
+}
+
+/* Confetti */
+.confetti{
+position:absolute;
+width:10px;
+height:14px;
+pointer-events:none;
+}
+
+/* Final overlay */
+.overlay{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.9);
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+opacity:0;
+pointer-events:none;
+transition:1s;
+z-index:5;
+text-align:center;
+padding:30px;
+}
+
+.overlay.show{
+opacity:1;
+pointer-events:auto;
+}
+
+.overlay h2{
+font-family:'Playfair Display',serif;
+font-size:2.2rem;
+margin-bottom:20px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Happiest Birthday Bujjjji Nayala ✨</h1>
+
+<div class="container">
+
+<div class="card" onclick="flip(this)">
+<div class="inner">
+<div class="front">Open Me 💌</div>
+<div class="back">
+<img src="./bimg1.jpeg">
+You are my favorite notification.
+</div>
+</div>
+</div>
+
+<div class="card" onclick="flip(this)">
+<div class="inner">
+<div class="front">Another One 🎁</div>
+<div class="back">
+<img src="./bimg2.jpeg">
+Life feels lighter with you in it.
+</div>
+</div>
+</div>
+
+<div class="card" onclick="flip(this)">
+<div class="inner">
+<div class="front">Just For You 🌙</div>
+<div class="back">
+<img src="./bimg3.jpeg">
+Every version of my future has you.
+</div>
+</div>
+</div>
+
+<div class="card" onclick="flip(this)">
+<div class="inner">
+<div class="front">Final Surprise ✨</div>
+<div class="back">
+<img src="./bimg4.jpeg">
+I choose you. Today. Tomorrow. Always.
+</div>
+</div>
+</div>
+
+</div>
+
+<div class="overlay" id="overlay">
+<h2>You Unlocked My Heart 💖</h2>
+<p>This is just the beginning of every birthday we’ll celebrate together.</p>
+</div>
+
+<script>
+let flippedCount=0;
+
+function flip(card){
+if(!card.classList.contains("flipped")){
+card.classList.add("flipped");
+flippedCount++;
+createConfetti();
+
+if(flippedCount===4){
+setTimeout(()=>{
+createMegaExplosion();
+document.getElementById("overlay").classList.add("show");
+},1200);
+}
+}
+}
+
+/* Multi-point Confetti */
+function createConfetti(){
+
+const colors=["#ff4ecd","#ffd166","#06d6a0","#118ab2","#ffffff"];
+
+for(let burst=0;burst<3;burst++){
+
+let originX=Math.random()*window.innerWidth;
+let originY=Math.random()*window.innerHeight;
+
+for(let i=0;i<35;i++){
+
+let conf=document.createElement("div");
+conf.className="confetti";
+conf.style.background=colors[Math.floor(Math.random()*colors.length)];
+conf.style.left=originX+"px";
+conf.style.top=originY+"px";
+
+let angle=Math.random()*2*Math.PI;
+let velocity=Math.random()*6+3;
+
+let x=Math.cos(angle)*velocity;
+let y=Math.sin(angle)*velocity;
+
+let gravity=0.15;
+let rotation=Math.random()*360;
+let rotateSpeed=Math.random()*10;
+
+document.body.appendChild(conf);
+
+let frame=0;
+
+function animate(){
+frame++;
+x*=0.98;
+y+=gravity;
+
+conf.style.transform=
+`translate(${x*frame}px,${y*frame}px)
+ rotate(${rotation+frame*rotateSpeed}deg)`;
+
+conf.style.opacity=1-frame/100;
+
+if(frame<100){
+requestAnimationFrame(animate);
+}else{
+conf.remove();
+}
+}
+
+requestAnimationFrame(animate);
+}
+}
+}
+
+function createMegaExplosion(){
+for(let i=0;i<5;i++){
+setTimeout(createConfetti,i*200);
+}
+}
+
+/* Original Mouse Gradient Interaction */
+document.addEventListener("mousemove",(e)=>{
+let x=e.clientX/window.innerWidth*100;
+let y=e.clientY/window.innerHeight*100;
+document.body.style.background=
+`radial-gradient(circle at ${x}% ${y}%, #1f1c2c, #302b63, #0f0c29)`;
+});
+</script>
+
+</body>
+</html>
